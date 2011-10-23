@@ -1,43 +1,52 @@
 dudlpad (planned) API
-===========
+=====================
 
-v0.1
-----
+v0.1alpha
+---------
 
-`DUDLPAD.create [parent]`
+### DUDLPAD.create [parent]
 
 ```coffeescript
-    pad = DUDLPAD.create $('#pad')
+  pad = DUDLPAD.create $('#pad')
 ```
 
-`pad.start [(pos) ->]`
-    
-    pad.start (pos) ->
-      console.log 'started at #{pos[0]}, #{pos[1]}'
+### pad.start [(pos) ->]
 
-`pad.draw [(start, end) ->]`
+```coffeescript
+  pad.start (pos) ->
+    console.log 'started at #{pos[0]}, #{pos[1]}'
+```
 
-    pad.draw (pos) ->
-      console.log 'drew from (#{start[0]}, #{start[1]}) to (#{end[0]}, #{end[1]})'
+### pad.draw [(start, end) ->]
 
-`pad.end [(pos) ->]`
+```coffeescript
+  pad.draw (pos) ->
+    console.log 'drew from (#{start[0]}, #{start[1]}) to (#{end[0]}, #{end[1]})'
+```
 
-    pad.start (pos) ->
-      console.log 'started at #{pos[0]}, #{pos[1]}'
+### pad.end [(pos) ->]
 
-`pad.undo (->)`
-    
-    pad.undo ->
-      console.log 'undo!'
+```coffeescript
+  pad.start (pos) ->
+    console.log 'started at #{pos[0]}, #{pos[1]}'
+```
 
-    $('#undo').click ->
-      pad.undo()
+### pad.undo (->)
 
-`pad.redo (->)`
+```coffeescript
+  pad.undo ->
+    console.log 'undo!'
 
-    pad.redo ->
-      console.log 'redo!'
+  $('#undo').click ->
+    pad.undo()
+```
 
-    $('#redo').click ->
-      pad.redo()
+### pad.redo (->)
 
+```coffeescript
+  pad.redo ->
+    console.log 'redo!'
+
+  $('#redo').click ->
+    pad.redo()
+```
