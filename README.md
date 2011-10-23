@@ -20,7 +20,7 @@ v0.1alpha
 ### pad.draw [(start, end) ->]
 
 ```coffeescript
-  pad.draw (pos) ->
+  pad.draw (start, end) ->
     console.log 'drew from (#{start[0]}, #{start[1]}) to (#{end[0]}, #{end[1]})'
 ```
 
