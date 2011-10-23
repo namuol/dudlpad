@@ -1,11 +1,8 @@
-dudlpad API
+dudlpad (planned) API
 ===========
 
-version 0.1
------------
-
-callbacks
----------
+v0.1
+----
 
 `DUDLPAD.create [parent]`
 
