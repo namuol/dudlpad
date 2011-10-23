@@ -6,7 +6,9 @@ v0.1
 
 `DUDLPAD.create [parent]`
 
+```coffeescript
     pad = DUDLPAD.create $('#pad')
+```
 
 `pad.start [(pos) ->]`
     
