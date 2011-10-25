@@ -1,43 +1,55 @@
-dudlpad (planned) API
+d&uuml;dlpad (planned) API
 =====================
 
-v0.1alpha
----------
+v0.1-pre-alpha
+--------------
 
 ### DUDLPAD.create [parent]
 
 ```coffeescript
-  pad = DUDLPAD.create $('#pad')
+  pad = DUDLPAD.create $("#pad")[0]
 ```
 
-### pad.start [(pos) ->]
+### pad.start [pos] | [(pos) ->]
 
 ```coffeescript
   pad.start (pos) ->
-    console.log 'started at #{pos[0]}, #{pos[1]}'
+    console.log "started at #{pos[0]}, #{pos[1]}"
+
+  pad.start [25,25]
 ```
 
-### pad.draw [(start, end) ->]
+### pad.draw [coords] | [(coords) ->]
 
 ```coffeescript
-  pad.draw (start, end) ->
-    console.log 'drew from (#{start[0]}, #{start[1]}) to (#{end[0]}, #{end[1]})'
+  pad.draw (coords) ->
+    i = 0
+    while i < coords.length
+      console.log "#{'drew' if i==0 else 'then'} from (#{coords[i]}, #{coords[i+1]}) to (#{coords[i+2]}, #{coords[i+3]})"
+      i += 4
+
+  pad.draw [
+    25,25
+    50,50
+  ]
 ```
 
-### pad.end [(pos) ->]
+### pad.end [pos] | [(pos) ->]
 
 ```coffeescript
-  pad.start (pos) ->
-    console.log 'started at #{pos[0]}, #{pos[1]}'
+  pad.end (pos) ->
+    console.log "ended at #{pos[0]}, #{pos[1]}"
+
+  pad.end [50,50]
 ```
 
 ### pad.undo (->)
 
 ```coffeescript
   pad.undo ->
-    console.log 'undo!'
+    console.log "undo!"
 
-  $('#undo').click ->
+  $("#undo").click ->
     pad.undo()
 ```
 
@@ -45,8 +57,21 @@ v0.1alpha
 
 ```coffeescript
   pad.redo ->
-    console.log 'redo!'
+    console.log "redo!"
 
-  $('#redo').click ->
+  $("#redo").click ->
     pad.redo()
+```
+
+### pad.canvas
+
+```coffeescript
+  pad.canvas # HTMLElement: <canvas>
+```
+
+### pad.mousepos [pagePos]
+
+```coffeescript
+  $(pad.canvas).mousedown (e) ->
+    pad.start pad.canvasPos [e.pageX,e.pageY]
 ```

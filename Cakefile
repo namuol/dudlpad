@@ -11,6 +11,7 @@ files = [
 ]
 
 task 'build', 'Create compiled JS output', ->
+  console.log 'build her a cake or something...'
   exec 'rm -rf lib/*.js', handle_errors
   exec 'coffee --compile --output lib/ src/', (err, stdout, stderr) ->
     throw err if err
