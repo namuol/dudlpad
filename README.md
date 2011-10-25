@@ -68,10 +68,3 @@ v0.1-pre-alpha
 ```coffeescript
   pad.canvas # HTMLElement: <canvas>
 ```
-
-### pad.mousepos [pagePos]
-
-```coffeescript
-  $(pad.canvas).mousedown (e) ->
-    pad.start pad.canvasPos [e.pageX,e.pageY]
-```

@@ -62,16 +62,5 @@ DUDLPAD.create = (container, width, height) ->
       throw 'not implemented yet'
 
     canvas: canvas
-    
-    canvasPos: (pagePos) ->
-      # Might want to remove this; KISS
-      canvasPos = $(canvas).offset()
-      absX = pagePos[0] - canvasPos.left
-      absY = pagePos[1] - canvasPos.top
-
-      return [
-        absX * (canvas.width / $(canvas).innerWidth())
-        absY * (canvas.height / $(canvas).innerHeight())
-      ]
 
   return pad
