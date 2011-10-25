@@ -25,8 +25,8 @@ v0.1-pre-alpha
   pad.draw (coords) ->
     i = 0
     while i < coords.length
-      console.log "#{'drew' if i==0 else 'then'} from (#{coords[i]}, #{coords[i+1]}) to (#{coords[i+2]}, #{coords[i+3]})"
-      i += 4
+      console.log "#{'drew from' if i==0 else '  then to'} (#{coords[i]}, #{coords[i+1]})"
+      i += 2
 
   pad.draw [
     25,25
