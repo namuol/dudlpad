@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <script src='lib/dudlpad.js'></script>
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js'></script>
+    <style type='text/css'>
+      #container { background: #aaa; width: 640px; height: 480px; }
+    </style>
+  </head>
+  <body>
+    <div id='container'>
+    </div>
+    <button id='undo'>undo</button>
+    <button id='redo'>redo</button>
+  </body>
+  <script>
+    var container = $('#container')[0],
+        width = 640,
+        height = 480,
+        pad = DUDLPAD.create(container, width, height),
+        drawing = false,
+        mouseX, mouseY;
+
+    function mousePos(e) {
+      var canvasPos = $(container).offset(),
+          absX = e.pageX - canvasPos.left,
+          absY = e.pageY - canvasPos.top;
+
+      return [absX * (width / $(container).innerWidth()),
+              absY * (height / $(container).innerHeight())];
+    }
+
+    $(container).mousedown(function (e) {
+      var pos = mousePos(e);
+      mouseX = pos[0];
+      mouseY = pos[1];
+
+      drawing = true;
+      pad.start([mouseX, mouseY]);
+    });
+
+    $(container).mousemove(function (e) {
+      if (drawing) {
+        var pos = mousePos(e);
+        pad.draw([mouseX, mouseY, pos[0], pos[1]]);
+        mouseX = pos[0];
+        mouseY = pos[1];
+      }
+    });
+
+    $(container).mouseup(function (e) {
+      var pos = mousePos(e);
+      pad.end([pos[0], pos[1]]);
+      drawing = false;
+    });
+
+    $('#undo').click(function () {
+      pad.undo();
+    });
+
+    $('#redo').click(function () {
+      pad.redo();
+    });
+  </script>
+</html>
