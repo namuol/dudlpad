@@ -77,7 +77,8 @@ v0.2.0 API
 ```
 
 ### pad.lineColor () | [[cssColor](http://dev.w3.org/csswg/css3-color/)] | [([cssColor](http://dev.w3.org/csswg/css3-color/)) ->]
-**not implemented**
+**not implemented - for v0.2.0**
+
 ```coffeescript
   console.log "the current line color is '#{pad.lineColor()}'"
 
@@ -89,7 +90,8 @@ v0.2.0 API
 ```
 
 ### pad.lineWidth () | [width] | [(width) ->]
-**not implemented**
+**not implemented - for v0.2.0**
+
 ```coffeescript
   console.log "the current line width is '#{pad.lineWidth()}'"
 
