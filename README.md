@@ -3,9 +3,9 @@ d&uuml;dlpad is a simple, lightweight, zero-dependency drawing surface that util
 It is implemented in [Coffee Script](http://jashkenas.github.com/coffee-script/).
 
 Some features:
- - callback-driven API
- - undo/redo support
- - (*planned*) drawing style support (e.g. line width, color, etc.)
+- callback-driven API
+- undo/redo support
+- (*planned*) drawing style support (e.g. line width, color, etc.)
 
 A live demo can be seen [here](http://namuol.github.com/dudlpad/).
 
