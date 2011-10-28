@@ -27,13 +27,7 @@ task 'build', 'Create compiled JS output', ->
   exec 'docco src/*.coffee'
 
 task 'deploy', 'Deploy live test and docco docs to GitHub', ->
-  exec 'mkdir tmp', handle_errors
-  exec 'cp -r live_test.html docs lib tmp/.', handle_errors
-  exec 'git checkout gh-pages', handle_errors
-  exec 'mv tmp/* .', handle_errors
-  exec 'rm -rf tmp', handle_errors
-  exec 'git commit -am "auto-deployed to GitHub"', handle_errors
-  exec 'git checkout master', handle_errors
+  exec 'sh deploy.sh', handle_errors
 
 task 'clean', ->
   exec 'rm -rf lib/*.js docs', handle_errors
