@@ -1,7 +1,22 @@
-d&uuml;dlpad (planned) API
+d&umml;dlpad is a simple, lightweight, zero-dependency drawing surface that utilizes the HTML5 `canvas` tag.
+
+It is implemented in [Coffee Script](http://jashkenas.github.com/coffee-script/).
+
+Some features:
+ - callback-driven API
+ - undo/redo support
+ - (*planned*) drawing style support (e.g. line width, color, etc.)
+
+A live demo can be seen [here](http://namuol.github.com/dudlpad/).
+
+A jQuery plugin that handles input events across different devices is also planned.
+
+---------------------------------------
+
+d&uuml;dlpad API
 =====================
 
-v0.1-pre-alpha
+v0.1-alpha
 --------------
 
 ### DUDLPAD.create [parent]
@@ -61,10 +76,4 @@ v0.1-pre-alpha
 
   $("#redo").click ->
     pad.redo()
-```
-
-### pad.canvas
-
-```coffeescript
-  pad.canvas # HTMLElement: <canvas>
 ```

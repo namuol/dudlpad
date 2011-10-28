@@ -13,27 +13,24 @@
     <button id='redo'>redo</button>
   </body>
   <script>
-    var pad = DUDLPAD.create(document.getElementById('container'), 640, 480),
+    var container = $('#container')[0],
+        width = 640,
+        height = 480,
+        pad = DUDLPAD.create(container, width, height),
         drawing = false,
         mouseX, mouseY;
-    pad.start(function (pos) {
-      //console.log('started at: ' + pos);
-    });
-    pad.draw(function (pos) {
-      //console.log(pos);
-    });
 
-    function mousePos(e, canvas) {
-      var canvasPos = $(canvas).offset(),
+    function mousePos(e) {
+      var canvasPos = $(container).offset(),
           absX = e.pageX - canvasPos.left,
           absY = e.pageY - canvasPos.top;
 
-      return [absX * (canvas.width / $(canvas).innerWidth()),
-              absY * (canvas.height / $(canvas).innerHeight())];
+      return [absX * (width / $(container).innerWidth()),
+              absY * (height / $(container).innerHeight())];
     }
 
-    $(pad.canvas).mousedown(function (e) {
-      var pos = mousePos(e, pad.canvas);
+    $(container).mousedown(function (e) {
+      var pos = mousePos(e);
       mouseX = pos[0];
       mouseY = pos[1];
 
@@ -41,17 +38,17 @@
       pad.start([mouseX, mouseY]);
     });
 
-    $(pad.canvas).mousemove(function (e) {
+    $(container).mousemove(function (e) {
       if (drawing) {
-        var pos = mousePos(e, pad.canvas);
+        var pos = mousePos(e);
         pad.draw([mouseX, mouseY, pos[0], pos[1]]);
         mouseX = pos[0];
         mouseY = pos[1];
       }
     });
 
-    $(pad.canvas).mouseup(function (e) {
-      var pos = mousePos(e, pad.canvas);
+    $(container).mouseup(function (e) {
+      var pos = mousePos(e);
       pad.end([pos[0], pos[1]]);
       drawing = false;
     });
