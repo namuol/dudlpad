@@ -24,6 +24,7 @@ task 'build', 'Create compiled JS output', ->
           mindata = jsmin.jsmin data
           fs.writeFile "lib/#{file}.min.js", mindata, (err) ->
             throw err if err
+  exec 'docco src/*.coffee'
 
 task 'clean', ->
-  exec 'rm -rf lib/*.js', handle_errors
+  exec 'rm -rf lib/*.js docs', handle_errors
