@@ -1,4 +1,4 @@
-d&umml;dlpad is a simple, lightweight, zero-dependency drawing surface that utilizes the HTML5 `canvas` tag.
+d&uuml;dlpad is a simple, lightweight, zero-dependency drawing surface that utilizes the HTML5 `canvas` tag.
 
 It is implemented in [Coffee Script](http://jashkenas.github.com/coffee-script/).
 
