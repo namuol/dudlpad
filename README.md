@@ -14,14 +14,13 @@ Annotated source can be viewed [here](http://namuol.github.com/dudlpad/docs/dudl
 
 A jQuery plugin that handles input events across different devices is also planned.
 
-
-v0.1.0 API
+v0.2.0 API
 ==========
 
 ### DUDLPAD.create [parent]
 
 ```coffeescript
-  pad = DUDLPAD.create $("#pad")[0]
+  pad = DUDLPAD.create $('#pad')[0]
 ```
 
 ### pad.start [pos] | [(pos) ->]
@@ -63,7 +62,7 @@ v0.1.0 API
   pad.undo ->
     console.log "undo!"
 
-  $("#undo").click ->
+  $('#undo').click ->
     pad.undo()
 ```
 
@@ -73,6 +72,33 @@ v0.1.0 API
   pad.redo ->
     console.log "redo!"
 
-  $("#redo").click ->
+  $('#redo').click ->
     pad.redo()
+```
+
+### pad.lineColor () | [[cssColor](http://dev.w3.org/csswg/css3-color/)] | [([cssColor](http://dev.w3.org/csswg/css3-color/)) ->]
+**not implemented**
+```coffeescript
+  console.log "the current line color is '#{pad.lineColor()}'"
+
+  pad.lineColor (cssColor) ->
+    console.log "line color was changed to '#{cssColor}'"
+
+  $('input#color').change ->
+    pad.lineColor $(this).val()
+```
+
+### pad.lineWidth () | [width] | [(width) ->]
+**not implemented**
+```coffeescript
+  console.log "the current line width is '#{pad.lineWidth()}'"
+
+  pad.lineWidth (width) ->
+    console.log "line width was changed to '#{width}'"
+
+  $('#widen').click ->
+    pad.lineWidth pad.lineWidth() + 1.0
+
+  $('#narrow').click ->
+    pad.lineWidth pad.lineWidth() - 1.0
 ```

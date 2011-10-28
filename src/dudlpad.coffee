@@ -192,3 +192,11 @@ DUDLPAD.create = (container, width, height) ->
 
   redo: canHaveCallback ->
     hist.redo()
+  
+  # For v0.2.0 (not implemented yet)
+  lineColor: canHaveCallback ->
+    throw 'not implemented yet'
+
+  # For v0.2.0 (not implemented yet)
+  lineWidth: canHaveCallback ->
+    throw 'not implemented yet'
