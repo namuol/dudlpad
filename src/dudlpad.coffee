@@ -178,20 +178,25 @@ DUDLPAD.create = (container, width, height) ->
     drawing = true
     hist.punchIn()
     drawLines [pos[0], pos[1], pos[0], pos[1] + 0.1]
+    return @
 
   draw: canHaveCallback (coords) ->
     if drawing
       drawLines coords
+    return @
 
   end: canHaveCallback (pos) ->
     drawing = false
     hist.punchOut()
+    return @
 
   undo: canHaveCallback ->
     hist.undo()
+    return @
 
   redo: canHaveCallback ->
     hist.redo()
+    return @
   
   # For v0.2.0 (not implemented yet)
   lineColor: canHaveCallback ->
