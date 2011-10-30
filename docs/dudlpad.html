@@ -112,20 +112,25 @@ in order up until the current history position.</p>             </td>           
     <span class="nv">drawing = </span><span class="kc">true</span>
     <span class="nx">hist</span><span class="p">.</span><span class="nx">punchIn</span><span class="p">()</span>
     <span class="nx">drawLines</span> <span class="p">[</span><span class="nx">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nx">@</span>
 
   <span class="nv">draw: </span><span class="nx">canHaveCallback</span> <span class="nf">(coords) -&gt;</span>
     <span class="k">if</span> <span class="nx">drawing</span>
       <span class="nx">drawLines</span> <span class="nx">coords</span>
+    <span class="k">return</span> <span class="nx">@</span>
 
   <span class="nv">end: </span><span class="nx">canHaveCallback</span> <span class="nf">(pos) -&gt;</span>
     <span class="nv">drawing = </span><span class="kc">false</span>
     <span class="nx">hist</span><span class="p">.</span><span class="nx">punchOut</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nx">@</span>
 
   <span class="nv">undo: </span><span class="nx">canHaveCallback</span> <span class="o">-&gt;</span>
     <span class="nx">hist</span><span class="p">.</span><span class="nx">undo</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nx">@</span>
 
   <span class="nv">redo: </span><span class="nx">canHaveCallback</span> <span class="o">-&gt;</span>
     <span class="nx">hist</span><span class="p">.</span><span class="nx">redo</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nx">@</span>
   </pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>For v0.2.0 (not implemented yet)</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">lineColor: </span><span class="nx">canHaveCallback</span> <span class="o">-&gt;</span>
     <span class="k">throw</span> <span class="s">&#39;not implemented yet&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>For v0.2.0 (not implemented yet)</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">lineWidth: </span><span class="nx">canHaveCallback</span> <span class="o">-&gt;</span>
     <span class="k">throw</span> <span class="s">&#39;not implemented yet&#39;</span>
