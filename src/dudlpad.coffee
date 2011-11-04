@@ -130,6 +130,60 @@ DUDLPAD.create = (container, width, height) ->
   if not container?
     throw 'null container was passed to `create`.'
 
+  # Draws lines based on a list of coordinates.
+  # Set in the `resetAll` method as it needs to be `wrap`ped
+  # by the `hist` object which is not set until `resetAll`
+  # is called.
+  drawLines = null
+
+  # A `history` object to track changes for undo/redo functionality.
+  # It is set in the `resetAll` method.
+  hist = null
+
+  # For keeping track of the current drawing style.
+  # These are set in the `resetAll` method.
+  strokeStyle = null
+  lineWidth = null
+
+  clearCanvas = null
+
+  # Puts the canvas in a 'pristine' state.
+  resetCanvas = ->
+    clearCanvas()
+    context.strokeStyle = 'black'
+    context.lineWidth = 2.0
+    context.lineCap = 'round'
+    context.lineJoin = 'round'
+
+  # Resets the canvas and the history object.
+  resetAll = ->
+    hist = history()
+
+    # Ensure that our canvas is 'pristine' before performing `undo`
+    hist.beforeUndo resetCanvas
+
+    clearCanvas = hist.wrap ->
+      context.clearRect 0, 0, canvas.width, canvas.height
+
+    drawLines = hist.wrap (style, coords) ->
+      for own name, value of style
+        context[name] = value
+      context.beginPath()
+
+      i = 0
+      while i < coords.length
+        context.moveTo coords[i], coords[i + 1]
+        context.lineTo coords[i + 2], coords[i + 3]
+        i += 2
+
+      context.closePath()
+      context.stroke()
+
+    resetCanvas()
+
+    strokeStyle = context.strokeStyle
+    lineWidth = context.lineWidth
+
   # Add the css-class `dudlpad-container`.
   container.class = container.class + ' dudlpad-container'
   
@@ -140,16 +194,8 @@ DUDLPAD.create = (container, width, height) ->
 
   # Set the default properties of the canvas.
   context = canvas.getContext '2d'
-  
-  # Puts the canvas in a 'pristine' state.
-  resetCanvas = ->
-    context.clearRect 0, 0, canvas.width, canvas.height
-    context.strokeStyle = 'black'
-    context.lineWidth = 2.0
-    context.lineCap = 'round'
-    context.lineJoin = 'round'
 
-  resetCanvas()
+  resetAll()
   
   # Add the `canvas` to the passed-in `container`
   container.appendChild canvas
@@ -157,31 +203,8 @@ DUDLPAD.create = (container, width, height) ->
   # Flag to track when we have started/ended drawing.
   drawing = false
 
-  # A `history` object to track changes for undo/redo functionality.
-  hist = history()
 
-  # Ensure that our canvas is 'pristine' before performing `undo`
-  hist.beforeUndo resetCanvas
-
-  # Draws lines based on a list of coordinates.
-  drawLines = hist.wrap (style, coords) ->
-    for own name, value of style
-      console.log "setting #{name} to #{value}"
-      context[name] = value
-    context.beginPath()
-
-    i = 0
-    while i < coords.length
-      context.moveTo coords[i], coords[i + 1]
-      context.lineTo coords[i + 2], coords[i + 3]
-      i += 2
-
-    context.closePath()
-    context.stroke()
-
-  strokeStyle = context.strokeStyle
-  lineWidth = context.lineWidth
-  
+    
   # The `pad` object.
   start: canHaveCallback (pos) ->
     drawing = true
@@ -221,4 +244,14 @@ DUDLPAD.create = (container, width, height) ->
   lineWidth: canHaveCallback (width) ->
     return lineWidth if arguments.length is 0
     lineWidth = width
+    return @
+  
+  clear: canHaveCallback ->
+    hist.punchIn()
+    clearCanvas()
+    hist.punchOut()
+    return @
+
+  reset: canHaveCallback ->
+    resetAll()
     return @

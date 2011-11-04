@@ -4,6 +4,10 @@
     <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js'></script>
     <style type='text/css'>
       #container { background: #aaa; width: 640px; height: 480px; }
+      a.color { display: block; float: left; background: #aaa; padding: 2pt 5pt; text-align: center; margin: 2pt; text-decoration: none; border: 2pt solid transparent; }
+      a.color:hover { background: #bbb; }
+      a.color:active { background: #999; }
+      a.color.current { border: 2pt solid black; }
     </style>
   </head>
   <body>
@@ -19,14 +23,18 @@
     <button id='widen'>widen</button>
     <button id='narrow'>narrow</button>
     <br />
-    <button class='color' id='fff'>#</button>
-    <button class='color' id='000'>#</button>
-    <button class='color' id='f00'>#</button>
-    <button class='color' id='0f0'>#</button>
-    <button class='color' id='00f'>#</button>
-    <button class='color' id='f0f'>#</button>
-    <button class='color' id='ff0'>#</button>
-    <button class='color' id='0ff'>#</button>
+    <button id='clear'>clear</button>
+    <button id='reset'>reset</button>
+    <br />
+    <a class='color' href='#fff'>&hearts;</a>
+    <a class='color' href='#000'>&hearts;</a>
+    <a class='color' href='#f00'>&hearts;</a>
+    <a class='color' href='#0f0'>&hearts;</a>
+    <a class='color' href='#00f'>&hearts;</a>
+    <a class='color' href='#f0f'>&hearts;</a>
+    <a class='color' href='#ff0'>&hearts;</a>
+    <a class='color' href='#0ff'>&hearts;</a>
+    <br />
   </body>
   <script>
     var container = $('#container')[0],
@@ -85,12 +93,25 @@
       pad.lineWidth(pad.lineWidth() / 1.5);
     });
 
-    $('button.color').each(function () {
-      $(this).css({color: '#' + this.id});
+    $('a.color').each(function () {
+      $(this).css({color: $(this).attr('href')});
     }).live('click', function () {
-      pad.lineColor('#' + this.id);
+      $('a.color').removeClass('current');
+      $(this).addClass('current');
+      pad.lineColor($(this).attr('href'));
+      return false;
     });
 
+    $('a.color[href="#000"]').click();
+
+    $('#clear').click(function () {
+      pad.clear();
+    });
+
+    $('#reset').click(function () {
+      pad.reset();
+      $('a.color[href="#000"]').click();
+    });
 
   </script>
 </html>

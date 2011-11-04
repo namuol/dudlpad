@@ -77,8 +77,6 @@ v0.2.0 API
 ```
 
 ### pad.lineColor () | [[cssColor](http://dev.w3.org/csswg/css3-color/)] | [([cssColor](http://dev.w3.org/csswg/css3-color/)) ->]
-**not implemented - for v0.2.0**
-
 ```coffeescript
   console.log "the current line color is '#{pad.lineColor()}'"
 
@@ -90,8 +88,6 @@ v0.2.0 API
 ```
 
 ### pad.lineWidth () | [width] | [(width) ->]
-**not implemented - for v0.2.0**
-
 ```coffeescript
   console.log "the current line width is '#{pad.lineWidth()}'"
 
@@ -103,4 +99,25 @@ v0.2.0 API
 
   $('#narrow').click ->
     pad.lineWidth pad.lineWidth() - 1.0
+```
+
+### pad.clear (->)
+```coffeescript
+  pad.clear ->
+    console.log 'canvas was cleared!'
+
+  $('#clear').click ->
+    pad.clear()
+```
+
+### pad.reset (->)
+
+This will clear the canvas *and* reset the line color/thickness.
+
+```coffeescript
+  pad.reset ->
+    console.log 'canvas was reset!'
+
+  $('#reset').click ->
+    pad.reset()
 ```
