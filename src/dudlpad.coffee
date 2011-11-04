@@ -142,6 +142,7 @@ DUDLPAD.create = (container, width, height) ->
   # Puts the canvas in a 'pristine' state.
   resetCanvas = ->
     context.clearRect 0, 0, canvas.width, canvas.height
+    context.strokeStyle = 'black'
     context.lineWidth = 2.0
     context.lineCap = 'round'
     context.lineJoin = 'round'
@@ -161,7 +162,9 @@ DUDLPAD.create = (container, width, height) ->
   hist.beforeUndo resetCanvas
 
   # Draws lines based on a list of coordinates.
-  drawLines = hist.wrap (coords) ->
+  drawLines = hist.wrap (style, coords) ->
+    for own name, value of style
+      context[name] = value
     context.beginPath()
 
     i = 0
@@ -172,17 +175,21 @@ DUDLPAD.create = (container, width, height) ->
 
     context.closePath()
     context.stroke()
+
+  currentStyle =
+    strokeStyle: context.strokeStyle
+    lineWidth: context.lineWidth
   
   # The `pad` object.
   start: canHaveCallback (pos) ->
     drawing = true
     hist.punchIn()
-    drawLines [pos[0], pos[1], pos[0], pos[1] + 0.1]
+    drawLines currentStyle, [pos[0], pos[1], pos[0], pos[1] + 0.1]
     return @
 
   draw: canHaveCallback (coords) ->
     if drawing
-      drawLines coords
+      drawLines currentStyle, coords
     return @
 
   end: canHaveCallback (pos) ->
@@ -199,9 +206,11 @@ DUDLPAD.create = (container, width, height) ->
     return @
   
   # For v0.2.0 (not implemented yet)
-  lineColor: canHaveCallback ->
-    throw 'not implemented yet'
+  lineColor: canHaveCallback (color) ->
+    return currentStyle.strokeStyle if arguments.length is 0
+    currentStyle.strokeStyle = color
 
   # For v0.2.0 (not implemented yet)
-  lineWidth: canHaveCallback ->
-    throw 'not implemented yet'
+  lineWidth: canHaveCallback (width) ->
+    return currentStyle.lineWidth if arguments.length is 0
+    currentStyle.lineWidth = width
