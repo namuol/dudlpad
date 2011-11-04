@@ -15,6 +15,18 @@
     </div>
     <button id='undo'>undo</button>
     <button id='redo'>redo</button>
+    <br />
+    <button id='widen'>widen</button>
+    <button id='narrow'>narrow</button>
+    <br />
+    <button class='color' id='fff'>#</button>
+    <button class='color' id='000'>#</button>
+    <button class='color' id='f00'>#</button>
+    <button class='color' id='0f0'>#</button>
+    <button class='color' id='00f'>#</button>
+    <button class='color' id='f0f'>#</button>
+    <button class='color' id='ff0'>#</button>
+    <button class='color' id='0ff'>#</button>
   </body>
   <script>
     var container = $('#container')[0],
@@ -64,5 +76,21 @@
     $('#redo').click(function () {
       pad.redo();
     });
+
+    $('#widen').click(function () {
+      pad.lineWidth(pad.lineWidth() * 1.5);
+    });
+
+    $('#narrow').click(function () {
+      pad.lineWidth(pad.lineWidth() / 1.5);
+    });
+
+    $('button.color').each(function () {
+      $(this).css({color: '#' + this.id});
+    }).live('click', function () {
+      pad.lineColor('#' + this.id);
+    });
+
+
   </script>
 </html>
