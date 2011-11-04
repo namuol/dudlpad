@@ -33,8 +33,9 @@ canHaveCallback = (inner) ->
     res = true
     res = before.apply pad, args if before?
     if res != false
-      inner.apply pad, args
+      res = inner.apply pad, args
     after.apply pad, args if after?
+    return res
 
 # For UNDO/REDO functionality.
 history = ->
@@ -42,12 +43,13 @@ history = ->
   # Returns a function that first runs the `func` argument and then
   # if we are `punchedIn`, appends the function to our current history item.
   wrap = (func) ->
-    ->
-      func.apply func, arguments
+    (args...) ->
+      res = func.apply func, args
       if punchedIn
         hist[hpos].push
           func: func
-          args: arguments
+          args: args
+      return res
 
   # The array that stores each history item (an array of function/argument pairs).
   hist = []
@@ -164,6 +166,7 @@ DUDLPAD.create = (container, width, height) ->
   # Draws lines based on a list of coordinates.
   drawLines = hist.wrap (style, coords) ->
     for own name, value of style
+      console.log "setting #{name} to #{value}"
       context[name] = value
     context.beginPath()
 
@@ -176,20 +179,25 @@ DUDLPAD.create = (container, width, height) ->
     context.closePath()
     context.stroke()
 
-  currentStyle =
-    strokeStyle: context.strokeStyle
-    lineWidth: context.lineWidth
+  strokeStyle = context.strokeStyle
+  lineWidth = context.lineWidth
   
   # The `pad` object.
   start: canHaveCallback (pos) ->
     drawing = true
     hist.punchIn()
-    drawLines currentStyle, [pos[0], pos[1], pos[0], pos[1] + 0.1]
+    drawLines
+      lineWidth: lineWidth
+      strokeStyle: strokeStyle
+    , [pos[0], pos[1], pos[0], pos[1] + 0.1]
     return @
 
   draw: canHaveCallback (coords) ->
     if drawing
-      drawLines currentStyle, coords
+      drawLines
+        lineWidth: lineWidth
+        strokeStyle: strokeStyle
+      , coords
     return @
 
   end: canHaveCallback (pos) ->
@@ -205,12 +213,12 @@ DUDLPAD.create = (container, width, height) ->
     hist.redo()
     return @
   
-  # For v0.2.0 (not implemented yet)
   lineColor: canHaveCallback (color) ->
-    return currentStyle.strokeStyle if arguments.length is 0
-    currentStyle.strokeStyle = color
+    return strokeStyle if arguments.length is 0
+    strokeStyle = color
+    return @
 
-  # For v0.2.0 (not implemented yet)
   lineWidth: canHaveCallback (width) ->
-    return currentStyle.lineWidth if arguments.length is 0
-    currentStyle.lineWidth = width
+    return lineWidth if arguments.length is 0
+    lineWidth = width
+    return @
