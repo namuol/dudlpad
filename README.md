@@ -110,9 +110,21 @@ v0.2.0 API
     pad.clear()
 ```
 
+### pad.unbind (event)
+```coffeescript
+  pad.start ->
+    console.log 'start!'
+  pad.start [0,0] # console output: 'start!'
+
+  pad.unbind 'start'
+
+  pad.start [0,0] # No console output.
+```
+
 ### pad.reset (->)
 
 This will clear the canvas *and* reset the line color/thickness.
+It doesn't reset any callbacks. (See `unbind`)
 
 ```coffeescript
   pad.reset ->

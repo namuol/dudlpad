@@ -5,6 +5,16 @@ if module?
 else
   window.DUDLPAD = DUDLPAD
 
+noFalses = (array) ->
+  if array.length > 0
+    val = array.pop()
+    return false if val is false
+    return noFalses(array)
+  return true
+
+# Internal object reference used for `unbind`
+__clearCallbacks = {}
+
 # Lets you call any function with a single function
 # or object that looks like `{before: <func>, after: <func>}`
 # as the first argument to change the callback function
@@ -18,23 +28,42 @@ else
 # 
 # To alter the `after` callback without changing the `before` callback,
 # pass `{after: <func>}`.
-canHaveCallback = (inner) ->
-  before = null
-  after = null
-  return (args...) ->
+# 
+# To clear a callback, pass the string 'clear' instead of a function
+# for any of the above situations.
+canHaveCallback = (inner, retVal) ->
+  before = []
+  after = []
+  before.remove = after.remove = (from, to) ->
+    rest = @slice((to or from) + 1 or @length)
+    @length = if from < 0 then @length + from else from
+    @push.apply(@, rest)
+  
+  clearCallbacks = ->
+    before = []
+    after = []
+
+  func = (args...) ->
     if args[0]?
       if typeof args[0] == 'function'
-        before = args[0]
-        return
+        before.push args[0]
+        return retVal
+      else if args[0] is __clearCallbacks
+        clearCallbacks()
+        return retVal
       else if typeof args[0] == 'object' and (args[0].before? or args[0].after?)
-        before = args[0].before if args[0].before?
-        after = args[0].after if args[0].after?
-        return
-    res = true
-    res = before.apply pad, args if before?
-    if res != false
+        if args[0].before?
+          before.push args[0].before
+        if args[0].after?
+          after.push args[0].after
+        return retVal
+
+    beforeResults = []
+    for bef in before
+      beforeResults.push bef.apply pad, args
+    if noFalses beforeResults
       res = inner.apply pad, args
-    after.apply pad, args if after?
+    aft.apply pad, args for aft in after
     return res
 
 # For UNDO/REDO functionality.
@@ -203,55 +232,64 @@ DUDLPAD.create = (container, width, height) ->
   # Flag to track when we have started/ended drawing.
   drawing = false
 
-
-    
   # The `pad` object.
-  start: canHaveCallback (pos) ->
-    drawing = true
-    hist.punchIn()
-    drawLines
-      lineWidth: lineWidth
-      strokeStyle: strokeStyle
-    , [pos[0], pos[1], pos[0], pos[1] + 0.1]
-    return @
-
-  draw: canHaveCallback (coords) ->
-    if drawing
+  pad =
+    start: canHaveCallback (pos) ->
+      drawing = true
+      hist.punchIn()
       drawLines
         lineWidth: lineWidth
         strokeStyle: strokeStyle
-      , coords
-    return @
+      , [pos[0], pos[1], pos[0], pos[1] + 0.1]
+      return @
 
-  end: canHaveCallback (pos) ->
-    drawing = false
-    hist.punchOut()
-    return @
+    draw: canHaveCallback (coords) ->
+      if drawing
+        drawLines
+          lineWidth: lineWidth
+          strokeStyle: strokeStyle
+        , coords
+      return @
 
-  undo: canHaveCallback ->
-    hist.undo()
-    return @
+    end: canHaveCallback (pos) ->
+      drawing = false
+      hist.punchOut()
+      return @
 
-  redo: canHaveCallback ->
-    hist.redo()
-    return @
-  
-  lineColor: canHaveCallback (color) ->
-    return strokeStyle if arguments.length is 0
-    strokeStyle = color
-    return @
+    undo: canHaveCallback ->
+      hist.undo()
+      return @
 
-  lineWidth: canHaveCallback (width) ->
-    return lineWidth if arguments.length is 0
-    lineWidth = width
-    return @
-  
-  clear: canHaveCallback ->
-    hist.punchIn()
-    clearCanvas()
-    hist.punchOut()
-    return @
+    redo: canHaveCallback ->
+      hist.redo()
+      return @
+    
+    lineColor: canHaveCallback (color) ->
+      return strokeStyle if arguments.length is 0
+      strokeStyle = color
+      return @
 
-  reset: canHaveCallback ->
-    resetAll()
-    return @
+    lineWidth: canHaveCallback (width) ->
+      return lineWidth if arguments.length is 0
+      lineWidth = width
+      return @
+    
+    clear: canHaveCallback ->
+      hist.punchIn()
+      clearCanvas()
+      hist.punchOut()
+      return @
+
+    reset: canHaveCallback ->
+      resetAll()
+      return @
+    
+    unbind: (name) ->
+      if @[name]?
+        @[name](__clearCallbacks)
+
+DUDLPAD.recorder = (pad) ->
+  reel = []
+
+  record: ->
+  reel: -> reel
