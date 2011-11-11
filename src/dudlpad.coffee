@@ -288,8 +288,3 @@ DUDLPAD.create = (container, width, height) ->
       if @[name]?
         @[name](__clearCallbacks)
 
-DUDLPAD.recorder = (pad) ->
-  reel = []
-
-  record: ->
-  reel: -> reel
