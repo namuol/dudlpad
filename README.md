@@ -6,7 +6,8 @@ Some features:
 
 - callback-driven API
 - undo/redo support
-- (*planned*) drawing style support (e.g. line width, color, etc.)
+- drawing style support (e.g. line width, color, etc.)
+- (*planned*) recording/playback capabilities
 
 A live demo can be seen [here](http://namuol.github.com/dudlpad/).
 
