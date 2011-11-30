@@ -28,9 +28,9 @@ __clearCallbacks = {}
 # 
 # To alter the `after` callback without changing the `before` callback,
 # pass `{after: <func>}`.
-# 
-# To clear a callback, pass the string 'clear' instead of a function
-# for any of the above situations.
+#
+# To clear a callback, pass in the internal `__clearCallbacks` object
+# reference instead of a function in any of the above situations.
 canHaveCallback = (inner, retVal) ->
   before = []
   after = []
