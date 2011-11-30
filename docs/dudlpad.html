@@ -24,8 +24,8 @@ the <code>before</code> callback.</p>
 <p>To alter the <code>after</code> callback without changing the <code>before</code> callback,
 pass <code>{after: &lt;func&gt;}</code>.</p>
 
-<p>To clear a callback, pass the string 'clear' instead of a function
-for any of the above situations.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">canHaveCallback = </span><span class="nf">(inner, retVal) -&gt;</span>
+<p>To clear a callback, pass in the internal <code>__clearCallbacks</code> object
+reference instead of a function in any of the above situations.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">canHaveCallback = </span><span class="nf">(inner, retVal) -&gt;</span>
   <span class="nv">before = </span><span class="p">[]</span>
   <span class="nv">after = </span><span class="p">[]</span>
   <span class="nv">before.remove = after.remove = </span><span class="nf">(from, to) -&gt;</span>
