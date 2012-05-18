@@ -222,21 +222,29 @@ DUDLPAD.create = (canvas) ->
 
   # The `pad` object.
   pad =
-    start: canHaveCallback(@, (pos) ->
+    start: canHaveCallback(@, (pos, color) ->
       drawing = true
       hist.punchIn()
+      if color?
+        _strokeStyle = color
+      else
+        _strokeStyle = strokeStyle
       drawLines
         lineWidth: lineWidth
-        strokeStyle: strokeStyle
+        strokeStyle: _strokeStyle
       , [pos[0], pos[1], pos[0], pos[1] + 0.1]
       return @
     )
 
-    draw: canHaveCallback(@, (coords) ->
+    draw: canHaveCallback(@, (coords, color) ->
       if drawing
+        if color?
+          _strokeStyle = color
+        else
+          _strokeStyle = strokeStyle
         drawLines
           lineWidth: lineWidth
-          strokeStyle: strokeStyle
+          strokeStyle: _strokeStyle
         , coords
       return @
     )
