@@ -237,15 +237,14 @@ DUDLPAD.create = (canvas) ->
     )
 
     draw: canHaveCallback(@, (coords, color) ->
-      if drawing
-        if color?
-          _strokeStyle = color
-        else
-          _strokeStyle = strokeStyle
-        drawLines
-          lineWidth: lineWidth
-          strokeStyle: _strokeStyle
-        , coords
+      if color?
+        _strokeStyle = color
+      else
+        _strokeStyle = strokeStyle
+      drawLines
+        lineWidth: lineWidth
+        strokeStyle: _strokeStyle
+      , coords
       return @
     )
 
