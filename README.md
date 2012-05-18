@@ -21,7 +21,7 @@ v0.2.0 API
 ### DUDLPAD.create [parent]
 
 ```coffeescript
-  pad = DUDLPAD.create $('#pad')[0]
+  pad = DUDLPAD.create my_canvas
 ```
 
 ### pad.start [pos] | [(pos) ->]

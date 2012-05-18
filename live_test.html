@@ -1,5 +1,7 @@
 <html>
   <head>
+    <meta name="viewport" 
+      content="width=device-width, initial-scale=1.0, user-scalable=no">
     <script src='lib/dudlpad.js'></script>
     <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js'></script>
     <style type='text/css'>
@@ -8,6 +10,7 @@
       a.color:hover { background: #bbb; }
       a.color:active { background: #999; }
       a.color.current { border: 2pt solid black; }
+      canvas {width: 100%;}
     </style>
   </head>
   <body>
@@ -16,6 +19,7 @@
       <li>view the <a href='docs/dudlpad.html'>annotated source</a></li>
     </ul>
     <div id='container'>
+      <canvas width=320 height=240 />
     </div>
     <button id='undo'>undo</button>
     <button id='redo'>redo</button>
@@ -37,81 +41,116 @@
     <br />
   </body>
   <script>
-    var container = $('#container')[0],
-        width = 640,
-        height = 480,
-        pad = DUDLPAD.create(container, width, height),
-        drawing = false,
-        mouseX, mouseY;
+    $(function () {
+      (function () {
+        function touchHandler(event) {
+           var touches = event.changedTouches,
+                 first = touches[0],
+                  type = "";
 
-    function mousePos(e) {
-      var canvasPos = $(container).offset(),
-          absX = e.pageX - canvasPos.left,
-          absY = e.pageY - canvasPos.top;
+          switch (event.type) {
+          case "touchstart": type="mousedown"; break;
+          case "touchmove":  type="mousemove"; break;        
+          case "touchend":   type="mouseup"; break;
+          default: return;
+          }
 
-      return [absX * (width / $(container).innerWidth()),
-              absY * (height / $(container).innerHeight())];
-    }
+          var simulatedEvent = document.createEvent("MouseEvent");
+          simulatedEvent.initMouseEvent(type, true, true, window, 1,
+                                    first.screenX, first.screenY,
+                                    first.clientX, first.clientY, false,
+                                    false, false, false, 0, null);
 
-    $(container).mousedown(function (e) {
-      var pos = mousePos(e);
-      mouseX = pos[0];
-      mouseY = pos[1];
+          first.target.dispatchEvent(simulatedEvent);
+          event.preventDefault();
+        }
 
-      drawing = true;
-      pad.start([mouseX, mouseY]);
-    });
+        function touchInit() {
+           document.addEventListener("touchstart", touchHandler, true);
+           document.addEventListener("touchmove", touchHandler, true);
+           document.addEventListener("touchend", touchHandler, true);
+           document.addEventListener("touchcancel", touchHandler, true);    
+        }
+        
+        touchInit();
+      }());
 
-    $(container).mousemove(function (e) {
-      if (drawing) {
+      var container = $('#container')[0],
+          canvas = $('#container canvas')[0],
+          width = 320,
+          height = 240,
+          pad = DUDLPAD.create(canvas),
+          drawing = false,
+          mouseX, mouseY;
+
+      function mousePos(e) {
+        var canvasPos = $(container).offset(),
+            absX = e.pageX - canvasPos.left,
+            absY = e.pageY - canvasPos.top;
+
+        return [absX * (width / $(container).innerWidth()),
+                absY * (height / $(container).innerHeight())];
+      }
+
+      $(container).mousedown(function (e) {
         var pos = mousePos(e);
-        pad.draw([mouseX, mouseY, pos[0], pos[1]]);
         mouseX = pos[0];
         mouseY = pos[1];
-      }
-    });
 
-    $(container).mouseup(function (e) {
-      var pos = mousePos(e);
-      pad.end([pos[0], pos[1]]);
-      drawing = false;
-    });
+        drawing = true;
+        pad.start([mouseX, mouseY]);
+      });
 
-    $('#undo').click(function () {
-      pad.undo();
-    });
+      $(container).mousemove(function (e) {
+        if (drawing) {
+          var pos = mousePos(e);
+          pad.draw([mouseX, mouseY, pos[0], pos[1]]);
+          mouseX = pos[0];
+          mouseY = pos[1];
+        }
+      });
 
-    $('#redo').click(function () {
-      pad.redo();
-    });
+      $(container).mouseup(function (e) {
+        var pos = mousePos(e);
+        pad.end([pos[0], pos[1]]);
+        drawing = false;
+      });
 
-    $('#widen').click(function () {
-      pad.lineWidth(pad.lineWidth() * 1.5);
-    });
+      $('#undo').click(function () {
+        pad.undo();
+      });
 
-    $('#narrow').click(function () {
-      pad.lineWidth(pad.lineWidth() / 1.5);
-    });
+      $('#redo').click(function () {
+        pad.redo();
+      });
 
-    $('a.color').each(function () {
-      $(this).css({color: $(this).attr('href')});
-    }).live('click', function () {
-      $('a.color').removeClass('current');
-      $(this).addClass('current');
-      pad.lineColor($(this).attr('href'));
-      return false;
-    });
+      $('#widen').click(function () {
+        pad.lineWidth(pad.lineWidth() * 1.5);
+      });
 
-    $('a.color[href="#000"]').click();
+      $('#narrow').click(function () {
+        pad.lineWidth(pad.lineWidth() / 1.5);
+      });
 
-    $('#clear').click(function () {
-      pad.clear();
-    });
+      $('a.color').each(function () {
+        $(this).css({color: $(this).attr('href')});
+      }).live('click', function () {
+        $('a.color').removeClass('current');
+        $(this).addClass('current');
+        pad.lineColor($(this).attr('href'));
+        return false;
+      });
 
-    $('#reset').click(function () {
-      pad.reset();
       $('a.color[href="#000"]').click();
-    });
 
+      $('#clear').click(function () {
+        pad.clear();
+      });
+
+      $('#reset').click(function () {
+        pad.reset();
+        $('a.color[href="#000"]').click();
+      });
+    });
   </script>
 </html>

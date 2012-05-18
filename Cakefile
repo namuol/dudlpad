@@ -15,7 +15,7 @@ task 'build', 'Create compiled JS output', ->
   exec 'rm -rf lib/*.js docs', handle_errors
   exec 'coffee --compile --output lib/ src/', (err, stdout, stderr) ->
     throw err if err
-    console.log stdout + stderr
+    #console.log stdout + stderr
 
     for file in files
       do (file) ->

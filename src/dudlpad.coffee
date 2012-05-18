@@ -17,10 +17,10 @@ __clearCallbacks = {}
 
 # Lets you call any function with a single function
 # or object that looks like `{before: <func>, after: <func>}`
-# as the first argument to change the callback function
+# as the second argument to change the callback(pad, function
 # that runs before or after the `inner` function is called.
 #
-# If a `function` is passed as the first argument, it overrides
+# If a `function` is passed as the second argument, it overrides
 # the `before` callback.
 #
 # To cancel the execution of the `inner` function, return `false` from
@@ -31,7 +31,7 @@ __clearCallbacks = {}
 #
 # To clear a callback, pass in the internal `__clearCallbacks` object
 # reference instead of a function in any of the above situations.
-canHaveCallback = (inner, retVal) ->
+canHaveCallback = (pad, inner, retVal) ->
   before = []
   after = []
   before.remove = after.remove = (from, to) ->
@@ -110,7 +110,7 @@ history = ->
   
   _beforeUndo = null
   
-  # A callback that should set the canvas/whatever to a pristine state
+  # A callback(pad, that should set the canvas/whatever to a pristine state
   # so it can be repainted using the recorded history. Takes no arguments.
   beforeUndo = (func) ->
     _beforeUndo = func
@@ -155,10 +155,9 @@ history = ->
   undo: undo
   redo: redo
 
-DUDLPAD.create = (container, width, height) ->
-  if not container?
-    throw 'null container was passed to `create`.'
-
+DUDLPAD.create = (canvas) ->
+  if not canvas?
+    throw 'null canvas was passed to `create`.'
   # Draws lines based on a list of coordinates.
   # Set in the `resetAll` method as it needs to be `wrap`ped
   # by the `hist` object which is not set until `resetAll`
@@ -213,28 +212,17 @@ DUDLPAD.create = (container, width, height) ->
     strokeStyle = context.strokeStyle
     lineWidth = context.lineWidth
 
-  # Add the css-class `dudlpad-container`.
-  container.class = container.class + ' dudlpad-container'
-  
-  # Create a new `canvas` element.
-  canvas = document.createElement 'canvas'
-  canvas.width = width
-  canvas.height = height
-
   # Set the default properties of the canvas.
   context = canvas.getContext '2d'
 
   resetAll()
   
-  # Add the `canvas` to the passed-in `container`
-  container.appendChild canvas
-
   # Flag to track when we have started/ended drawing.
   drawing = false
 
   # The `pad` object.
   pad =
-    start: canHaveCallback (pos) ->
+    start: canHaveCallback(@, (pos) ->
       drawing = true
       hist.punchIn()
       drawLines
@@ -242,49 +230,57 @@ DUDLPAD.create = (container, width, height) ->
         strokeStyle: strokeStyle
       , [pos[0], pos[1], pos[0], pos[1] + 0.1]
       return @
+    )
 
-    draw: canHaveCallback (coords) ->
+    draw: canHaveCallback(@, (coords) ->
       if drawing
         drawLines
           lineWidth: lineWidth
           strokeStyle: strokeStyle
         , coords
       return @
+    )
 
-    end: canHaveCallback (pos) ->
+    end: canHaveCallback(@, (pos) ->
       drawing = false
       hist.punchOut()
       return @
+    )
 
-    undo: canHaveCallback ->
+    undo: canHaveCallback(@, ->
       hist.undo()
       return @
+    )
 
-    redo: canHaveCallback ->
+    redo: canHaveCallback(@, ->
       hist.redo()
       return @
+    )
     
-    lineColor: canHaveCallback (color) ->
+    lineColor: canHaveCallback(@, (color) ->
       return strokeStyle if arguments.length is 0
       strokeStyle = color
       return @
+    )
 
-    lineWidth: canHaveCallback (width) ->
+    lineWidth: canHaveCallback(@, (width) ->
       return lineWidth if arguments.length is 0
       lineWidth = width
       return @
+    )
     
-    clear: canHaveCallback ->
+    clear: canHaveCallback(@, ->
       hist.punchIn()
       clearCanvas()
       hist.punchOut()
       return @
+    )
 
-    reset: canHaveCallback ->
+    reset: canHaveCallback(@, ->
       resetAll()
       return @
+    )
     
     unbind: (name) ->
       if @[name]?
         @[name](__clearCallbacks)
-
