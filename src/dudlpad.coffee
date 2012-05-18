@@ -199,7 +199,7 @@ DUDLPAD.create = (canvas) ->
       context.beginPath()
 
       i = 0
-      while i < coords.length
+      while i+3 < coords.length
         context.moveTo coords[i], coords[i + 1]
         context.lineTo coords[i + 2], coords[i + 3]
         i += 2
