@@ -66,10 +66,11 @@
         }
 
         function touchInit() {
-           document.addEventListener("touchstart", touchHandler, true);
-           document.addEventListener("touchmove", touchHandler, true);
-           document.addEventListener("touchend", touchHandler, true);
-           document.addEventListener("touchcancel", touchHandler, true);    
+          var container = $('#container')[0];
+          container.addEventListener("touchstart", touchHandler, true);
+          container.addEventListener("touchmove", touchHandler, true);
+          container.addEventListener("touchend", touchHandler, true);
+          container.addEventListener("touchcancel", touchHandler, true);    
         }
         
         touchInit();
